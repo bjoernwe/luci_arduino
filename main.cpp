@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "luci.h"
+#include "Luci.h"
 
 
 void setup() {
