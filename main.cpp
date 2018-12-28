@@ -5,6 +5,10 @@
 
 
 unsigned int brightness = 5;
+unsigned int brightness_r = -1;
+unsigned int brightness_g = -1;
+unsigned int brightness_b = -1;
+unsigned int brightness_w = -1;
 unsigned int hz = 15;
 double dutyCycle = .5;
 
@@ -59,14 +63,14 @@ void loop() {
 	switch(cycle) {
 	case 0: {
 		digitalWrite(LED_BUILTIN, HIGH);
-		luci.setLEDsLeft(brightness);
+		luci.setLEDsLeft(brightness, brightness_r, brightness_g, brightness_b, brightness_w);
 		luci.setLEDsRight(0);
 		break;
 	}
 	case 1: {
 		digitalWrite(LED_BUILTIN, LOW);
 		luci.setLEDsLeft(0);
-		luci.setLEDsRight(brightness);
+		luci.setLEDsRight(brightness, brightness_r, brightness_g, brightness_b, brightness_w);
 		break;
 	}
 	default: {
@@ -91,8 +95,34 @@ void serialEvent() {
 			case 'B': {
 				brightness = Serial.parseInt();
 				brightness = constrain(brightness, 0, 255);
+				brightness_r = -1;
+				brightness_g = -1;
+				brightness_b = -1;
+				brightness_w = -1;
 				Serial.print("Brightness: ");
 				Serial.println(brightness);
+				break;
+			}
+			case 'C': {
+				Serial.setTimeout(100);
+				brightness_r = Serial.parseInt();
+				brightness_g = Serial.parseInt();
+				brightness_b = Serial.parseInt();
+				brightness_w = Serial.parseInt();
+				brightness_r = constrain(brightness_r, 0, 255);
+				brightness_g = constrain(brightness_g, 0, 255);
+				brightness_b = constrain(brightness_b, 0, 255);
+				brightness_w = constrain(brightness_w, 0, 255);
+				brightness = -1;
+				Serial.print("Color: (");
+				Serial.print(brightness_r);
+				Serial.print(", ");
+				Serial.print(brightness_g);
+				Serial.print(", ");
+				Serial.print(brightness_b);
+				Serial.print(", ");
+				Serial.print(brightness_w);
+				Serial.println(")");
 				break;
 			}
 			case 'D': {
